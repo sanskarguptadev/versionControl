@@ -1,0 +1,14 @@
+.prg{
+    color: royalblue;
+    margin-left: 30%;
+}
+
+.released {
+    color: green;
+    margin-left: 30%;
+}
+
+.unreleased {
+    color: greenyellow;
+    margin-left: 30%;
+}
