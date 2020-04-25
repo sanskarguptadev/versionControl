@@ -36,7 +36,6 @@ class AddVersion extends Component {
         endDate: null,
         description: '',
         progress: 0,
-        tasks: ['No tasks'],
     }
 
     handleChange = name => event => {
@@ -106,7 +105,6 @@ class AddVersion extends Component {
                         color="primary" 
                         className={classes.button}
                         onClick={() => this.resetHandler(this.state)}
-                        disabled = {!this.state.versionName || !this.state.description || !this.state.startDate || !this.state.endDate}
                     >
                         Add
                     </Button>

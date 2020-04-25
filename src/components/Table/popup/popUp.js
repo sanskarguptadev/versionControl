@@ -80,7 +80,7 @@ class Popup extends React.Component {
                     id="date"
                     label="Start Date"
                     type="date"
-                    defaultValue={this.state.startDate}
+                    value={this.state.startDate}
                     onChange={this.handleChange('startDate')}
                     className={classes.datePicker}
                     InputLabelProps={{
@@ -91,7 +91,7 @@ class Popup extends React.Component {
                     id="date"
                     label="End Date"
                     type="date"
-                    defaultValue={this.state.endDate}
+                    value={this.state.endDate}
                     onChange={this.handleChange('endDate')}
                     className={classes.datePicker}
                     InputLabelProps={{

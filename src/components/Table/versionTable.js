@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
 import PopUp from './popup/popUp';
+import ProgressBar from 'react-bootstrap/ProgressBar';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import TaskInput from './expand/taskInput';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import './versionTable.css';
 
 class VersionTable extends Component{
@@ -8,6 +14,9 @@ class VersionTable extends Component{
         requiredItem: null,
         show: false,
         modaldata: [],
+        dataList: [],
+        expand: false,
+        expandId: null,
     }
    
     
@@ -16,7 +25,7 @@ class VersionTable extends Component{
             requiredItem: index,
             show: !this.state.show,
             modaldata: this.props.data[index],
-        }, () => {console.log('table', this.state.modaldata);});
+        });
         
     }
 
@@ -51,21 +60,67 @@ class VersionTable extends Component{
         return result;
     }
 
+    expandHandler = (index) =>{
+        this.setState({
+            expand: !this.state.expand,
+            expandId: index,
+        });
+    }
+
+    expandcallbackFunction = (childData) => {
+        this.props.addExpandtask(childData);
+    }
+
     render(){
+        console.log(this.props.tasks);
         const list = this.props.data.map((d, index) => {
-            return(
-                <tr key={d.id}>
-                    <td>{d.versionName}</td>
-                    <td> {this.status(d.progress)}</td>
-                    <td>{d.progress}</td>
-                    <td>{d.startDate}</td>
-                    <td>{d.endDate}</td>
-                    <td>{d.description}</td>
-                    <td>
-                        <button onClick={() => this.openModal(index)}>Edit</button>
-                        <button onClick={() => this.deleteData(d.id)}>Delete</button>
-                    </td>
-                </tr>
+            return (
+                <React.Fragment>
+                    <tr key={d.id}>
+                        <td>
+                            {
+                                this.state.expand && (this.state.expandId === index) ?
+                                <ExpandMoreIcon onClick={() => this.expandHandler(index)} />
+                                :
+                                <ChevronRightIcon onClick={() => this.expandHandler(index)}/>
+                            }
+                            
+                        </td>
+                        <td>
+                            {d.versionName}
+                        </td>
+                        <td> {this.status(d.progress)}</td>
+                        <td><ProgressBar now={d.progress} /></td>
+                        <td>{d.startDate}</td>
+                        <td>{d.endDate}</td>
+                        <td>{d.description}</td>
+                        <td>
+                            <EditIcon style={{cursor: 'pointer'}} onClick={() => this.openModal(index)}></EditIcon>
+                            <DeleteIcon style={{cursor: 'pointer'}} onClick={() => this.deleteData(d.id)}></DeleteIcon>
+                        </td>
+                    </tr>
+                    {
+                    (this.state.expand) ? (index === this.state.expandId)? 
+                    <tr>
+                        <td></td>
+                        <td style={{paddingTop: '40px'}}>Enter The tasks</td>
+                        <td><TaskInput id={d.id} parentCallback={this.expandcallbackFunction}/></td>
+                        <td>
+                        {
+                            this.props.tasks.map((item) =>{
+                            return item.id === d.id? <ul><li>{item.task}</li></ul> : null
+                            })
+                        }
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    : null 
+                    : null
+                    }
+                </React.Fragment>
             )
         });
        
@@ -74,6 +129,7 @@ class VersionTable extends Component{
                <Table responsive className="professional">
                     <thead>
                         <tr className="head">
+                            <th></th>
                             <th>Version</th>
                             <th>Status</th>
                             <th>Progress</th>
